@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Empréstimos - Biblioteca</title><link rel="stylesheet" th:href="@{/css/style.css}"></head>
+<body>
+<header><h1>Biblioteca</h1><nav><a th:href="@{/}">Início</a><a th:href="@{/livros}">Livros</a><a th:href="@{/autores}">Autores</a><a th:href="@{/categorias}">Categorias</a><a th:href="@{/usuarios}">Usuários</a><a th:href="@{/emprestimos}">Empréstimos</a></nav></header>
+<main><h2>Empréstimos</h2>
+<form th:if="${indiceEdicao == null}" th:object="${emprestimo}" th:action="@{/emprestimos}" method="post" class="formulario">
+<input th:field="*{nomeLivro}" placeholder="Livro" required><input th:field="*{nomeUsuario}" placeholder="Usuário" required>
+<input th:field="*{dataEmprestimo}" type="date" required><input th:field="*{dataDevolucao}" type="date" placeholder="Devolução">
+<select th:field="*{status}"><option value="Ativo">Ativo</option><option value="Devolvido">Devolvido</option><option value="Atrasado">Atrasado</option></select><button>Cadastrar</button></form>
+<form th:if="${indiceEdicao != null}" th:object="${emprestimo}" th:action="@{/emprestimos/editar/{indice}(indice=${indiceEdicao})}" method="post" class="formulario">
+<input th:field="*{nomeLivro}" placeholder="Livro" required><input th:field="*{nomeUsuario}" placeholder="Usuário" required>
+<input th:field="*{dataEmprestimo}" type="date" required><input th:field="*{dataDevolucao}" type="date">
+<select th:field="*{status}"><option value="Ativo">Ativo</option><option value="Devolvido">Devolvido</option><option value="Atrasado">Atrasado</option></select><button>Salvar alteração</button><a th:href="@{/emprestimos}" class="botao secundario">Cancelar</a></form>
+<table><thead><tr><th>Livro</th><th>Usuário</th><th>Empréstimo</th><th>Devolução</th><th>Status</th><th>Ações</th></tr></thead><tbody>
+<tr th:if="${#lists.isEmpty(emprestimos)}"><td colspan="6">Nenhum empréstimo cadastrado.</td></tr>
+<tr th:each="item, status : ${emprestimos}"><td th:text="${item.nomeLivro}"></td><td th:text="${item.nomeUsuario}"></td><td th:text="${item.dataEmprestimo}"></td><td th:text="${item.dataDevolucao}"></td><td th:text="${item.status}"></td><td>
+<a th:href="@{/emprestimos/editar/{indice}(indice=${status.index})}" class="botao">Editar</a>
+<form th:action="@{/emprestimos/excluir/{indice}(indice=${status.index})}" method="post" class="acao"><button class="perigo">Excluir</button></form></td></tr>
+</tbody></table></main></body></html>

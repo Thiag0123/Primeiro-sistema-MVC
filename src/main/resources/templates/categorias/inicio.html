@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Categorias - Biblioteca</title><link rel="stylesheet" th:href="@{/css/style.css}"></head>
+<body>
+<header><h1>Biblioteca</h1><nav><a th:href="@{/}">Início</a><a th:href="@{/livros}">Livros</a><a th:href="@{/autores}">Autores</a><a th:href="@{/categorias}">Categorias</a><a th:href="@{/usuarios}">Usuários</a><a th:href="@{/emprestimos}">Empréstimos</a></nav></header>
+<main><h2>Categorias</h2>
+<form th:if="${indiceEdicao == null}" th:object="${categoria}" th:action="@{/categorias}" method="post" class="formulario">
+<input th:field="*{nome}" placeholder="Nome" required><input th:field="*{descricao}" placeholder="Descrição"><button>Cadastrar</button></form>
+<form th:if="${indiceEdicao != null}" th:object="${categoria}" th:action="@{/categorias/editar/{indice}(indice=${indiceEdicao})}" method="post" class="formulario">
+<input th:field="*{nome}" placeholder="Nome" required><input th:field="*{descricao}" placeholder="Descrição"><button>Salvar alteração</button><a th:href="@{/categorias}" class="botao secundario">Cancelar</a></form>
+<table><thead><tr><th>Nome</th><th>Descrição</th><th>Ações</th></tr></thead><tbody>
+<tr th:if="${#lists.isEmpty(categorias)}"><td colspan="3">Nenhuma categoria cadastrada.</td></tr>
+<tr th:each="item, status : ${categorias}"><td th:text="${item.nome}"></td><td th:text="${item.descricao}"></td><td>
+<a th:href="@{/categorias/editar/{indice}(indice=${status.index})}" class="botao">Editar</a>
+<form th:action="@{/categorias/excluir/{indice}(indice=${status.index})}" method="post" class="acao"><button class="perigo">Excluir</button></form></td></tr>
+</tbody></table></main></body></html>

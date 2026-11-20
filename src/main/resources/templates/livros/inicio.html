@@ -1,15 +1,62 @@
 <!DOCTYPE html>
-<html xmlns:th="...">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Biblioteca</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Livros - Biblioteca</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<h1 th:text="'Sistema de Biblioteca'"></h1>
-<nav>
-    <a th:href="@{/livros}">
-        Livros
-    </a>
-</nav>
+<header>
+    <h1>Biblioteca</h1>
+    <nav>
+        <a th:href="@{/}">Início</a>
+        <a th:href="@{/livros}">Livros</a>
+        <a th:href="@{/autores}">Autores</a>
+        <a th:href="@{/categorias}">Categorias</a>
+        <a th:href="@{/usuarios}">Usuários</a>
+        <a th:href="@{/emprestimos}">Empréstimos</a>
+    </nav>
+</header>
+<main>
+    <h2>Livros</h2>
+    <form th:if="${indiceEdicao == null}" th:object="${livro}" th:action="@{/livros}" method="post" class="formulario">
+        <input th:field="*{titulo}" placeholder="Título" required>
+        <input th:field="*{autor}" placeholder="Autor" required>
+        <input th:field="*{isbn}" placeholder="ISBN" required>
+        <input th:field="*{categoria}" placeholder="Categoria">
+        <input th:field="*{anoPublicacao}" type="number" placeholder="Ano de publicação">
+        <button type="submit">Cadastrar</button>
+    </form>
+    <form th:if="${indiceEdicao != null}" th:object="${livro}"
+          th:action="@{/livros/editar/{indice}(indice=${indiceEdicao})}" method="post" class="formulario">
+        <input th:field="*{titulo}" placeholder="Título" required>
+        <input th:field="*{autor}" placeholder="Autor" required>
+        <input th:field="*{isbn}" placeholder="ISBN" required>
+        <input th:field="*{categoria}" placeholder="Categoria">
+        <input th:field="*{anoPublicacao}" type="number" placeholder="Ano de publicação">
+        <button type="submit">Salvar alteração</button>
+        <a th:href="@{/livros}" class="botao secundario">Cancelar</a>
+    </form>
+    <table>
+        <thead><tr><th>Título</th><th>Autor</th><th>ISBN</th><th>Categoria</th><th>Ano</th><th>Ações</th></tr></thead>
+        <tbody>
+        <tr th:if="${#lists.isEmpty(livros)}"><td colspan="6">Nenhum livro cadastrado.</td></tr>
+        <tr th:each="livroItem, status : ${livros}">
+            <td th:text="${livroItem.titulo}"></td>
+            <td th:text="${livroItem.autor}"></td>
+            <td th:text="${livroItem.isbn}"></td>
+            <td th:text="${livroItem.categoria}"></td>
+            <td th:text="${livroItem.anoPublicacao}"></td>
+            <td>
+                <a th:href="@{/livros/editar/{indice}(indice=${status.index})}" class="botao">Editar</a>
+                <form th:action="@{/livros/excluir/{indice}(indice=${status.index})}" method="post" class="acao">
+                    <button type="submit" class="perigo">Excluir</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
 </body>
 </html>

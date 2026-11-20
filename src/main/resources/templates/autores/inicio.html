@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Autores - Biblioteca</title><link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header><h1>Biblioteca</h1><nav><a th:href="@{/}">Início</a><a th:href="@{/livros}">Livros</a><a th:href="@{/autores}">Autores</a><a th:href="@{/categorias}">Categorias</a><a th:href="@{/usuarios}">Usuários</a><a th:href="@{/emprestimos}">Empréstimos</a></nav></header>
+<main>
+<h2>Autores</h2>
+<form th:if="${indiceEdicao == null}" th:object="${autor}" th:action="@{/autores}" method="post" class="formulario">
+    <input th:field="*{nome}" placeholder="Nome" required>
+    <input th:field="*{nacionalidade}" placeholder="Nacionalidade">
+    <input th:field="*{anoNascimento}" type="number" placeholder="Ano de nascimento">
+    <button type="submit">Cadastrar</button>
+</form>
+<form th:if="${indiceEdicao != null}" th:object="${autor}" th:action="@{/autores/editar/{indice}(indice=${indiceEdicao})}" method="post" class="formulario">
+    <input th:field="*{nome}" placeholder="Nome" required>
+    <input th:field="*{nacionalidade}" placeholder="Nacionalidade">
+    <input th:field="*{anoNascimento}" type="number" placeholder="Ano de nascimento">
+    <button type="submit">Salvar alteração</button><a th:href="@{/autores}" class="botao secundario">Cancelar</a>
+</form>
+<table><thead><tr><th>Nome</th><th>Nacionalidade</th><th>Ano de nascimento</th><th>Ações</th></tr></thead><tbody>
+<tr th:if="${#lists.isEmpty(autores)}"><td colspan="4">Nenhum autor cadastrado.</td></tr>
+<tr th:each="item, status : ${autores}">
+    <td th:text="${item.nome}"></td><td th:text="${item.nacionalidade}"></td><td th:text="${item.anoNascimento}"></td>
+    <td><a th:href="@{/autores/editar/{indice}(indice=${status.index})}" class="botao">Editar</a>
+        <form th:action="@{/autores/excluir/{indice}(indice=${status.index})}" method="post" class="acao"><button class="perigo">Excluir</button></form></td>
+</tr></tbody></table>
+</main></body></html>
